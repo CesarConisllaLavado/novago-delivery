@@ -1,0 +1,96 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+    <div class="page-heading">
+        <p class="eyebrow">COMPRA LOCAL</p>
+        <h1>Encuentra lo que necesitas</h1>
+        <p>Explora nuestros productos y filtra por categoría o presupuesto.</p>
+    </div>
+
+    <form
+        method="get"
+        action="{% url 'products:list' %}"
+        class="filters"
+        aria-label="Filtros del catálogo"
+    >
+        {% if form.errors %}
+            <div class="error-summary" role="alert">
+                Revisa los filtros antes de continuar.
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="filter-fields">
+            {% for field in form %}
+                <div class="field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Aplicar filtros</button>
+
+            <a class="clear" href="{% url 'products:list' %}">
+                Limpiar filtros
+            </a>
+        </div>
+    </form>
+
+    {% if not form.errors %}
+        <div class="results-heading">
+            <h2>Productos disponibles</h2>
+            <span>
+                {{ products|length }} resultado{{ products|length|pluralize:"s" }}
+            </span>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+                <article class="product-card">
+                    <div class="category">
+                        {{ product.category.name|default:"Sin categoría" }}
+                    </div>
+
+                    <h3>
+                        <a href="{% url 'products:detail' product.pk %}">
+                            {{ product.name }}
+                        </a>
+                    </h3>
+
+                    <p class="description">
+                        {{ product.description|default:"Consulta los detalles del producto."|truncatechars:100 }}
+                    </p>
+
+                    <p class="price">
+                        S/ {{ product.price|floatformat:2 }}
+                    </p>
+
+                    {% if product.in_stock %}
+                        <span class="stock">
+                            Disponible · {{ product.stock }} unidades
+                        </span>
+                    {% else %}
+                        <span class="out-of-stock">Sin stock</span>
+                    {% endif %}
+
+                    <a
+                        class="details"
+                        href="{% url 'products:detail' product.pk %}"
+                    >
+                        Ver producto <span aria-hidden="true">→</span>
+                    </a>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <h3>No encontramos productos con esos filtros</h3>
+                    <p>Prueba otra categoría o amplía el rango de precios.</p>
+
+                    <a href="{% url 'products:list' %}">
+                        Ver todo el catálogo
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

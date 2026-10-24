@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}Catálogo | NovaGo Delivery{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'products/catalog.css' %}"
+    >
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{% url 'products:list' %}">
+            NovaGo<span>Delivery</span>
+        </a>
+
+        <span class="header-note">
+            Tu minimarket, más cerca
+        </span>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        NovaGo Delivery · Catálogo de productos
+    </footer>
+</body>
+</html>

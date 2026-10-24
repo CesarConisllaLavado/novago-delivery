@@ -1,0 +1,35 @@
+{% extends 'products/base.html' %}
+
+{% block title %}
+    {{ product.name }} | NovaGo Delivery
+{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{% url 'products:list' %}">
+        ← Volver al catálogo
+    </a>
+
+    <article class="product-detail">
+        <p class="eyebrow">
+            {{ product.category.name|default:"Sin categoría" }}
+        </p>
+
+        <h1>{{ product.name }}</h1>
+
+        <p>
+            {{ product.description|default:"Producto del catálogo NovaGo." }}
+        </p>
+
+        <p class="price">
+            S/ {{ product.price|floatformat:2 }}
+        </p>
+
+        {% if product.in_stock %}
+            <p class="stock">
+                Disponible · {{ product.stock }} unidades
+            </p>
+        {% else %}
+            <p class="out-of-stock">Sin stock</p>
+        {% endif %}
+    </article>
+{% endblock %}
